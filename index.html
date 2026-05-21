@@ -1,216 +1,145 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="th">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>XAUUSD & DXY Market Dashboard</title>
+    <title>Trading Dashboard - XAUUSD & Macro</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* Slate 900 */
-            color: #f8fafc; /* Slate 50 */
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
+        body { 
+            background-color: #0f172a; 
+            color: #f8fafc; 
         }
-        .widget-container {
-            position: relative;
-            width: 100%;
-            height: 400px; /* Default height for charts */
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            background-color: #1e293b; /* Slate 800 */
-            border: 1px solid #334155; /* Slate 700 */
+        .widget-container { 
+            height: 350px; 
+            width: 100%; 
+            border-radius: 8px; 
+            overflow: hidden; 
         }
-        @media (min-width: 1024px) {
-            .widget-container.main-chart {
-                height: 500px; /* Taller main chart on desktop */
-            }
+        /* ปรับลดความสูงของกราฟลงเมื่อดูในมือถือ (เพื่อไม่ให้กราฟที่โดนบีบแคบดูยืดเกินไป) */
+        @media (max-width: 768px) {
+            .widget-container { height: 250px; }
         }
     </style>
 </head>
-<body class="p-4 md:p-6 lg:p-8">
-
-    <header class="mb-8 flex flex-col md:flex-row justify-between items-center gap-4 border-b border-slate-700 pb-4">
-        <div>
-            <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 to-yellow-600">
-                Precious Metals & FX Dashboard
-            </h1>
-            <p class="text-slate-400 mt-1">Real-time analysis for XAUUSD across timeframes and DXY</p>
-        </div>
-        <div class="flex gap-2">
-            <div class="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 shadow-sm text-sm font-medium">
-                <span class="text-slate-400">Status:</span> <span class="text-emerald-400">● Live</span>
-            </div>
-            <div class="px-4 py-2 bg-slate-800 rounded-lg border border-slate-700 shadow-sm text-sm font-medium" id="clock">
-                --:--:--
-            </div>
-        </div>
+<body class="p-2 md:p-4 font-sans antialiased">
+    <header class="mb-4">
+        <h1 class="text-xl md:text-3xl font-bold text-amber-400">Trading Dashboard</h1>
+        <p class="text-xs md:text-sm text-slate-400">XAUUSD Multi-Timeframe & Macro Indicators</p>
     </header>
 
-    <main class="space-y-10">
-
-        <!-- XAUUSD Section -->
+    <main class="space-y-6 md:space-y-8">
+        <!-- ส่วนที่ 1: Gold (XAUUSD) -->
         <section>
-            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-yellow-500 border-b border-slate-700 pb-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                Gold (XAUUSD) Multi-Timeframe
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
-                <!-- XAUUSD M5 -->
+            <h2 class="text-base md:text-2xl font-bold mb-2 md:mb-4 text-amber-500 border-b border-slate-700 pb-2">Gold (XAUUSD)</h2>
+            <!-- ใช้ grid-cols-2 เพื่อบังคับให้มือถือแสดง 2 คอลัมน์ -->
+            <div class="grid grid-cols-2 lg:grid-cols-4 gap-2 md:gap-4">
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 text-slate-200">
-                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-bold">M5</span> Short-term
-                    </h3>
-                    <div class="widget-container" id="tv_xauusd_m5"></div>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">M5</h3>
+                    <div class="widget-container" id="tv_m5"></div>
                 </div>
-
-                <!-- XAUUSD M15 -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 text-slate-200">
-                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-bold">M15</span> Intraday
-                    </h3>
-                    <div class="widget-container" id="tv_xauusd_m15"></div>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">M15</h3>
+                    <div class="widget-container" id="tv_m15"></div>
                 </div>
-
-                <!-- XAUUSD H1 -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 text-slate-200">
-                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-bold">H1</span> Mid-term
-                    </h3>
-                    <div class="widget-container" id="tv_xauusd_h1"></div>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">H1</h3>
+                    <div class="widget-container" id="tv_h1"></div>
                 </div>
-
-                <!-- XAUUSD H4 -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 flex items-center gap-2 text-slate-200">
-                        <span class="px-2 py-1 bg-yellow-500/20 text-yellow-400 text-xs rounded font-bold">H4</span> Macro
-                    </h3>
-                    <div class="widget-container" id="tv_xauusd_h4"></div>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">H4</h3>
+                    <div class="widget-container" id="tv_h4"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Macro, Yields & Energy Section -->
+        <!-- ส่วนที่ 2: Macro, Yields & Energy -->
         <section>
-            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-blue-400 border-b border-slate-700 pb-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path></svg>
-                Macro, Yields & Energy (Daily)
-            </h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-                <!-- DXY -->
+            <h2 class="text-base md:text-2xl font-bold mb-2 md:mb-4 text-blue-400 border-b border-slate-700 pb-2">Macro, Yields & Energy</h2>
+            <!-- ใช้ grid-cols-2 เพื่อบังคับให้มือถือแสดง 2 คอลัมน์ -->
+            <div class="grid grid-cols-2 lg:grid-cols-3 gap-2 md:gap-4">
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">DXY - US Dollar Index</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">DXY (Dollar Index)</h3>
                     <div class="widget-container" id="tv_dxy"></div>
                 </div>
-
-                <!-- US02Y -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">US02Y - US 2Y Treasury Yield</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">US02Y</h3>
                     <div class="widget-container" id="tv_us02y"></div>
                 </div>
-
-                <!-- US10Y -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">US10Y - US 10Y Treasury Yield</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">US10Y</h3>
                     <div class="widget-container" id="tv_us10y"></div>
                 </div>
-
-                <!-- US30Y -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">US30Y - US 30Y Treasury Bond</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">US30Y</h3>
                     <div class="widget-container" id="tv_us30y"></div>
                 </div>
-
-                <!-- GVZ -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">GVZ - Gold Volatility Index</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">GVZ (Gold Volatility)</h3>
                     <div class="widget-container" id="tv_gvz"></div>
                 </div>
-
-                <!-- WTI Crude Oil -->
                 <div class="col-span-1">
-                    <h3 class="text-lg font-semibold mb-2 text-slate-200">WTI - Crude Oil</h3>
+                    <h3 class="text-xs md:text-lg font-semibold mb-1 text-slate-200">WTI (Crude Oil)</h3>
                     <div class="widget-container" id="tv_wti"></div>
                 </div>
             </div>
         </section>
 
-        <!-- Economic Calendar Section -->
+        <!-- ส่วนที่ 3: Economic Calendar -->
         <section>
-            <h2 class="text-2xl font-bold mb-4 flex items-center gap-2 text-purple-400 border-b border-slate-700 pb-2">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                ปฏิทินเศรษฐกิจ (Economic Calendar)
+            <h2 class="text-base md:text-2xl font-bold mb-2 md:mb-4 text-purple-400 border-b border-slate-700 pb-2 flex items-center gap-2">
+                <svg class="w-4 h-4 md:w-6 md:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                ปฏิทินเศรษฐกิจ (วันนี้)
             </h2>
             
-            <div class="widget-container" style="height: 500px; background-color: #ffffff;">
-                <!-- Using Investing.com's official embed widget to prevent X-Frame-Options block from their main site -->
-                <iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=datepicker,timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5&calType=week&timeZone=18&lang=1" width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
+            <div class="widget-container" style="height: 400px; background-color: #ffffff;">
+                <!-- เปลี่ยน calType=week เป็น calType=day เรียบร้อยแล้ว -->
+                <iframe src="https://sslecal2.investing.com?columns=exc_flags,exc_currency,exc_importance,exc_actual,exc_forecast,exc_previous&features=timezone&countries=25,32,6,37,72,22,17,39,14,10,35,43,56,36,110,11,26,12,4,5&calType=day&timeZone=18&lang=1" width="100%" height="100%" frameborder="0" allowtransparency="true" marginwidth="0" marginheight="0"></iframe>
             </div>
             
-            <div class="mt-3 flex justify-end">
-                <a href="https://th.investing.com/economic-calendar/" target="_blank" rel="noopener noreferrer" class="text-sm font-medium text-blue-400 hover:text-blue-300 flex items-center gap-2 transition-colors bg-slate-800 py-2 px-4 rounded-lg border border-slate-700 shadow-sm">
-                    <span>เปิดปฏิทินเศรษฐกิจภาษาไทย th.investing.com</span>
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+            <div class="mt-2 flex justify-end">
+                <a href="https://th.investing.com/economic-calendar/" target="_blank" rel="noopener noreferrer" class="text-xs md:text-sm font-medium text-blue-400 hover:text-blue-300 flex items-center gap-1 transition-colors bg-slate-800 py-1.5 px-3 rounded border border-slate-700">
+                    <span>เปิด th.investing.com แบบเต็มจอ</span>
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
                 </a>
             </div>
         </section>
-
     </main>
-
-    <footer class="mt-8 text-center text-slate-500 text-sm border-t border-slate-700 pt-4">
-        <p>Charts provided by <a href="https://www.tradingview.com/" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline">TradingView</a>.</p>
-        <p>Data is for informational purposes only and does not constitute financial advice.</p>
-    </footer>
 
     <script type="text/javascript" src="https://s3.tradingview.com/tv.js"></script>
     <script type="text/javascript">
-        // Helper function to create standard widget config
-        function createWidgetConfig(containerId, symbol, interval, title) {
-            return {
-                "autosize": true, // Let the CSS container handle the size
+        // ฟังก์ชันสร้างกราฟ TradingView
+        function createWidget(container_id, symbol, interval) {
+            new TradingView.widget({
+                "autosize": true,
                 "symbol": symbol,
                 "interval": interval,
-                "timezone": "Asia/Bangkok", // Set to local timezone based on prompt context
+                "timezone": "Asia/Bangkok",
                 "theme": "dark",
-                "style": "1", // 1 = Candles
-                "locale": "en",
+                "style": "1",
+                "locale": "th_TH",
                 "enable_publishing": false,
-                "backgroundColor": "#1e293b", // Match Tailwind slate-800
-                "gridColor": "#334155", // Match Tailwind slate-700
-                "hide_top_toolbar": false,
+                "hide_top_toolbar": true,
                 "hide_legend": false,
                 "save_image": false,
-                "container_id": containerId,
-                "studies": [
-                    "Volume@tv-basicstudies"
-                ]
-            };
+                "container_id": container_id,
+                "hide_volume": true // [ข้อ 1] เพิ่มคำสั่งนี้เพื่อเอา Volume Ticks ออกจากกราฟ
+            });
         }
 
-        // Initialize XAUUSD Charts
-        new TradingView.widget(createWidgetConfig("tv_xauusd_m5", "OANDA:XAUUSD", "5", "XAUUSD M5"));
-        new TradingView.widget(createWidgetConfig("tv_xauusd_m15", "OANDA:XAUUSD", "15", "XAUUSD M15"));
-        new TradingView.widget(createWidgetConfig("tv_xauusd_h1", "OANDA:XAUUSD", "60", "XAUUSD H1"));
-        new TradingView.widget(createWidgetConfig("tv_xauusd_h4", "OANDA:XAUUSD", "240", "XAUUSD H4"));
+        // โหลดกราฟ XAUUSD
+        createWidget("tv_m5", "OANDA:XAUUSD", "5");
+        createWidget("tv_m15", "OANDA:XAUUSD", "15");
+        createWidget("tv_h1", "OANDA:XAUUSD", "60");
+        createWidget("tv_h4", "OANDA:XAUUSD", "240");
 
-        // Initialize Macro & Yields Charts (Default to Daily timeframe 'D')
-        new TradingView.widget(createWidgetConfig("tv_dxy", "CAPITALCOM:DXY", "D", "US Dollar Index"));
-        new TradingView.widget(createWidgetConfig("tv_us02y", "TVC:US02Y", "D", "US 2-Year Treasury Note"));
-        new TradingView.widget(createWidgetConfig("tv_us10y", "TVC:US10Y", "D", "US 10-Year Treasury Note"));
-        new TradingView.widget(createWidgetConfig("tv_us30y", "TVC:US30Y", "D", "US 30-Year Treasury Bond"));
-        new TradingView.widget(createWidgetConfig("tv_gvz", "CBOE:GVZ", "D", "Gold Volatility Index"));
-        new TradingView.widget(createWidgetConfig("tv_wti", "TVC:USOIL", "D", "WTI Crude Oil"));
-
-        function updateClock() {
-            const now = new Date();
-            document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock(); // Initial call
+        // โหลดกราฟ Macro & Yields
+        createWidget("tv_dxy", "TVC:DXY", "D");
+        createWidget("tv_us02y", "TVC:US02Y", "D");
+        createWidget("tv_us10y", "TVC:US10Y", "D");
+        createWidget("tv_us30y", "TVC:US30Y", "D");
+        createWidget("tv_gvz", "CBOE:GVZ", "D");
+        createWidget("tv_wti", "TVC:USOIL", "D"); // ใช้สัญลักษณ์ USOIL สำหรับ WTI ใน TradingView
     </script>
 </body>
 </html>
